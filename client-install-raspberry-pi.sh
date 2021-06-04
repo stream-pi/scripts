@@ -134,7 +134,6 @@ fi
 echo Stream-Pi Client is installed. However your Pi needs to be restarted
 echo After Restart, You may cd to $INSTALL_DIRECTORY$FOLDER_NAME
 echo and run './run_console' or './run_desktop'
-read -n 1 -s -r -p $'Press any key to continue\n'
-
+read -p "Press enter to restart"
 sudo reboot
 
