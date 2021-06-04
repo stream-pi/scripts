@@ -8,15 +8,6 @@ INSTALL_DIRECTORY=~/
 FOLDER_NAME=stream-pi-client/
 
 
-# Check for root
-if [ $(id -u) -ne 0 ]; then
-  printf "Script must be run as root.\n"
-  exit 1
-fi
-
-
-
-
 echo Stream-Pi Client Installer Script For Raspberry Pi
 echo Version $VERSION
 
@@ -120,7 +111,7 @@ echo Adding touch support ...
 if grep -q -E "chown -R root:input /sys/class/input/\*/ && chmod -R 770 /sys/class/input/\*/;" /etc/udev/rules.d/99-com.rules ; then
 echo Touch support already exists ...
 else
-cat <<EOT >>$NINENINERULES
+sudo cat <<EOT >>$NINENINERULES
 SUBSYSTEM=="input*", PROGRAM="/bin/sh -c '\ 
         chown -R root:input /sys/class/input/*/ && chmod -R 770 /sys/class/input/*/;\ 
 '"
@@ -132,10 +123,10 @@ fi
 
 echo Turning ON FAKE KMS Driver ...
 
-sed $CONFIG -i -e "s/^dtoverlay=vc4-kms-v3d/#dtoverlay=vc4-kms-v3d/g"
-sed $CONFIG -i -e "s/^#dtoverlay=vc4-fkms-v3d/dtoverlay=vc4-fkms-v3d/g"
-if ! sed -n "/\[pi4\]/,/\[/ !p" $CONFIG | grep -q "^dtoverlay=vc4-fkms-v3d" ; then
-   printf "[all]\ndtoverlay=vc4-fkms-v3d\n" >> $CONFIG
+sudo sed $CONFIG -i -e "s/^dtoverlay=vc4-kms-v3d/#dtoverlay=vc4-kms-v3d/g"
+sudo sed $CONFIG -i -e "s/^#dtoverlay=vc4-fkms-v3d/dtoverlay=vc4-fkms-v3d/g"
+if ! sudo sed -n "/\[pi4\]/,/\[/ !p" $CONFIG | grep -q "^dtoverlay=vc4-fkms-v3d" ; then
+   sudo printf "[all]\ndtoverlay=vc4-fkms-v3d\n" >> $CONFIG
 fi
 
 
@@ -145,4 +136,4 @@ echo Stream-Pi Client is installed. However your Pi needs to be restarted
 echo After Restart, You may cd to $INSTALL_DIRECTORY$FOLDER_NAME 
 echo and run './run_console' or './run_desktop'
 read -n 1 -s -r -p $'Press any key to continue\n'
-reboot
+sudo reboot
