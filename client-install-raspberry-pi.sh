@@ -8,6 +8,7 @@ CONFIG=/boot/config.txt
 NINENINERULES=/etc/udev/rules.d/99-com.rules
 INSTALL_DIRECTORY=~/
 FOLDER_NAME=stream-pi-client/
+GPU_MEM=128
 
 
 # Necessary Methods
@@ -102,12 +103,16 @@ fi
 
 echo Turning ON FAKE KMS Driver ...
 
-sudo sed "$CONFIG" -i -e "s/^dtoverlay=vc4-kms-v3d/#dtoverlay=vc4-kms-v3d/g"
-sudo sed "$CONFIG" -i -e "s/^#dtoverlay=vc4-fkms-v3d/dtoverlay=vc4-fkms-v3d/g"
-if ! sudo sed -n "/\[pi4\]/,/\[/ !p" "$CONFIG" | grep -q "^dtoverlay=vc4-fkms-v3d" ; then
-   sudo printf "[all]\ndtoverlay=vc4-fkms-v3d\n" >> "$CONFIG"
+if ! grep -q "dtoverlay=vc4-fkms-v3d" ; then
+   sudo printf "dtoverlay=vc4-fkms-v3d\n" >> "$CONFIG"
 fi
 
+
+# Add GPU MEM
+
+if ! grep -q "gpu_mem=$(GPU_MEM)" ; then
+   sudo printf "gpu_mem=$(GPU_MEM)\n" >> "$CONFIG"
+fi
 
 
 echo Stream-Pi Client is installed. However your Pi needs to be restarted
