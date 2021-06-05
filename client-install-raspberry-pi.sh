@@ -6,9 +6,11 @@
 VERSION=1.0.0
 CONFIG=/boot/config.txt
 NINENINERULES=/etc/udev/rules.d/99-com.rules
-INSTALL_DIRECTORY=~/
+INSTALL_DIRECTORY=$HOME # current user's home dir as default
 FOLDER_NAME=stream-pi-client/
 GPU_MEM=128
+
+
 
 
 # Necessary Methods
@@ -52,6 +54,10 @@ if ! is_pi ; then
    exit 1
 fi
 
+# set custom installation directory if provided
+if [[ ! -z "$1" ]]; then
+   INSTALL_DIRECTORY="$1"
+fi
 
 echo Stream-Pi Client Installer Script For Raspberry Pi
 echo Version "$VERSION"
@@ -77,7 +83,7 @@ fi
 
 echo Downloading Client ...
 
-cd "$INSTALL_DIRECTORY"
+cd "$HOME"
 if ! axel -a -n 4 --output=spi.zip https://github.com/stream-pi/client/releases/download/1.0.0/client-linux-arm7-1.0.0-EA+2.zip ; then
    echo Unable to Download. Quitting ...
    exit 1
@@ -139,10 +145,13 @@ echo Setting gpu_mem to "$GPU_MEM" MB ...
 set_config_var gpu_mem "$GPU_MEM" $CONFIG
 
 
-echo Stream-Pi Client is installed. However your Pi needs to be restarted
-echo After Restart, You may cd to "$INSTALL_DIRECTORY""$FOLDER_NAME"
-echo and run './run_console' or './run_desktop'
-echo Restarting in 5 seconds ...
+cat << EOF
+Stream-Pi Client is installed. However your Pi needs to be restarted
+After Restart, You may cd to "$INSTALL_DIRECTORY/$FOLDER_NAME"
+and run './run_console' or './run_desktop'
+Restarting in 5 seconds ...
+EOF
+
 sleep 5
 
 sudo reboot
