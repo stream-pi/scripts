@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Stream-Pi Client Installer Script for Raspberry Pi 
-# This Script heavily makes use of a lot of code from the official raspi-config script (https://github.com/RPi-Distro/raspi-config)
+# This Script heavily makes use of some code from the official raspi-config script (https://github.com/RPi-Distro/raspi-config)
 
 VERSION=1.0.0
 CONFIG=/boot/config.txt
@@ -12,6 +12,28 @@ GPU_MEM=128
 
 
 # Necessary Methods
+
+set_config_var() {
+  lua - "$1" "$2" "$3" <<EOF > "$3.bak"
+local key=assert(arg[1])
+local value=assert(arg[2])
+local fn=assert(arg[3])
+local file=assert(io.open(fn))
+local made_change=false
+for line in file:lines() do
+  if line:match("^#?%s*"..key.."=.*$") then
+    line=key.."="..value
+    made_change=true
+  end
+  print(line)
+end
+
+if not made_change then
+  print(key.."="..value)
+end
+EOF
+mv "$3.bak" "$3"
+}
 
 is_pi() {
   ARCH=$(dpkg --print-architecture)
@@ -112,9 +134,9 @@ fi
 
 # Add GPU MEM
 
-if ! grep -q "gpu_mem=$(GPU_MEM)" ; then
-   sudo printf "gpu_mem=$(GPU_MEM)\n" >> "$CONFIG"
-fi
+echo Setting gpu_mem to "$GPU_MEM" MB ...
+
+set_config_var gpu_mem "$GPU_MEM" $CONFIG
 
 
 echo Stream-Pi Client is installed. However your Pi needs to be restarted
