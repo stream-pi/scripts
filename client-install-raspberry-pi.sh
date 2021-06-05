@@ -10,13 +10,9 @@ INSTALL_DIRECTORY=~/
 FOLDER_NAME=stream-pi-client/
 
 
-echo Stream-Pi Client Installer Script For Raspberry Pi
-echo Version "$VERSION"
-
-
 # Necessary Methods
 
-is_pi () {
+is_pi() {
   ARCH=$(dpkg --print-architecture)
   if [ "$ARCH" = "armhf" ] || [ "$ARCH" = "arm64" ] ; then
     return 0
@@ -26,35 +22,16 @@ is_pi () {
 }
 
 
-is_pione() {
-   if grep -q "^Revision\s*:\s*00[0-9a-fA-F][0-9a-fA-F]$" /proc/cpuinfo; then
-      return 0
-   elif grep -q "^Revision\s*:\s*[ 123][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F]0[0-36][0-9a-fA-F]$" /proc/cpuinfo ; then
-      return 0
-   else
-      return 1
-   fi
-}
+# Check whether this is even a pi or not
 
-is_pitwo() {
-   grep -q "^Revision\s*:\s*[ 123][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F]04[0-9a-fA-F]$" /proc/cpuinfo
-   return $?
-}
-
-is_pizero() {
-   grep -q "^Revision\s*:\s*[ 123][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F]0[9cC][0-9a-fA-F]$" /proc/cpuinfo
-   return $?
-}
-
-is_pifour() {
-   grep -q "^Revision\s*:\s*[ 123][0-9a-fA-F][0-9a-fA-F]3[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F]$" /proc/cpuinfo
-   return $?
-}
+if ! is_pi ; then
+   echo This is not a Pi. This script is only for Raspberry Pi Devices.
+   exit 1
+fi
 
 
-
-
-
+echo Stream-Pi Client Installer Script For Raspberry Pi
+echo Version "$VERSION"
 
 
 # Install required dependencies ...
@@ -62,7 +39,7 @@ is_pifour() {
 echo Installing required dependencies ...
 
 if ! sudo apt -y update ; then
-   echo Unable to run apt update. Check internet connection. Quitting ...
+   echo Unable to run apt update. Check internet connection / permissions. Quitting ...
    exit 1
 fi
 
