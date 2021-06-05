@@ -113,7 +113,7 @@ echo Adding touch support ...
 if grep -q -E "chown -R root:input /sys/class/input/\*/ && chmod -R 770 /sys/class/input/\*/;" /etc/udev/rules.d/99-com.rules ; then
 echo Touch support already exists ...
 else
-sudo cat <<EOT >>"$NINENINERULES"
+sudo tee -a "$NINENINERULES" > /dev/null <<EOT
 SUBSYSTEM=="input*", PROGRAM="/bin/sh -c '\
 chown -R root:input /sys/class/input/*/ && chmod -R 770 /sys/class/input/*/;\
 '"
@@ -136,7 +136,8 @@ fi
 echo Stream-Pi Client is installed. However your Pi needs to be restarted
 echo After Restart, You may cd to "$INSTALL_DIRECTORY""$FOLDER_NAME"
 echo and run './run_console' or './run_desktop'
-read -n 1 -s -r -p $'Press any key to continue\n'
+echo Restarting in 5 seconds ...
+sleep 5
 
 sudo reboot
 
