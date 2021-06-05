@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Stream-Pi Client Installer Script for Raspberry Pi 
 # This Script heavily makes use of a lot of code from the official raspi-config script (https://github.com/RPi-Distro/raspi-config)
 
@@ -9,7 +11,7 @@ FOLDER_NAME=stream-pi-client/
 
 
 echo Stream-Pi Client Installer Script For Raspberry Pi
-echo Version $VERSION
+echo Version "$VERSION"
 
 
 # Necessary Methods
@@ -75,27 +77,27 @@ fi
 
 echo Downloading Client ...
 
-cd $INSTALL_DIRECTORY
+cd "$INSTALL_DIRECTORY"
 if ! axel -a -n 4 --output=spi.zip https://github.com/stream-pi/client/releases/download/1.0.0/client-linux-arm7-1.0.0-EA+2.zip ; then
    echo Unable to Download. Quitting ...
    exit 1
 fi
 
 echo Previous Clean up ...
-rm -rf $FOLDER_NAME
+rm -rf "$FOLDER_NAME"
 
 
 
 echo Extracting ...
 
 
-unzip spi.zip -d $FOLDER_NAME
+unzip spi.zip -d "$FOLDER_NAME"
 
 echo Clean up ...
 rm -rf spi.zip
 
 echo Setting permissions ...
-cd $FOLDER_NAME
+cd "$FOLDER_NAME"
 chmod +x run_console
 chmod +x run_desktop
 chmod +x jre/bin/java
@@ -111,7 +113,7 @@ echo Adding touch support ...
 if grep -q -E "chown -R root:input /sys/class/input/\*/ && chmod -R 770 /sys/class/input/\*/;" /etc/udev/rules.d/99-com.rules ; then
 echo Touch support already exists ...
 else
-sudo cat <<EOT >>$NINENINERULES
+sudo cat <<EOT >>"$NINENINERULES"
 SUBSYSTEM=="input*", PROGRAM="/bin/sh -c '\ 
         chown -R root:input /sys/class/input/*/ && chmod -R 770 /sys/class/input/*/;\ 
 '"
@@ -123,17 +125,18 @@ fi
 
 echo Turning ON FAKE KMS Driver ...
 
-sudo sed $CONFIG -i -e "s/^dtoverlay=vc4-kms-v3d/#dtoverlay=vc4-kms-v3d/g"
-sudo sed $CONFIG -i -e "s/^#dtoverlay=vc4-fkms-v3d/dtoverlay=vc4-fkms-v3d/g"
-if ! sudo sed -n "/\[pi4\]/,/\[/ !p" $CONFIG | grep -q "^dtoverlay=vc4-fkms-v3d" ; then
-   sudo printf "[all]\ndtoverlay=vc4-fkms-v3d\n" >> $CONFIG
+sudo sed "$CONFIG" -i -e "s/^dtoverlay=vc4-kms-v3d/#dtoverlay=vc4-kms-v3d/g"
+sudo sed "$CONFIG" -i -e "s/^#dtoverlay=vc4-fkms-v3d/dtoverlay=vc4-fkms-v3d/g"
+if ! sudo sed -n "/\[pi4\]/,/\[/ !p" "$CONFIG" | grep -q "^dtoverlay=vc4-fkms-v3d" ; then
+   sudo printf "[all]\ndtoverlay=vc4-fkms-v3d\n" >> "$CONFIG"
 fi
 
 
 
 echo Stream-Pi Client is installed. However your Pi needs to be restarted
-echo After Restart, You may cd to $INSTALL_DIRECTORY$FOLDER_NAME
+echo After Restart, You may cd to "$INSTALL_DIRECTORY""$FOLDER_NAME"
 echo and run './run_console' or './run_desktop'
-read -p "Press enter to restart"
+read -n 1 -s -r -p $'Press any key to continue\n'
+
 sudo reboot
 
