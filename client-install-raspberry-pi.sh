@@ -114,8 +114,8 @@ if grep -q -E "chown -R root:input /sys/class/input/\*/ && chmod -R 770 /sys/cla
 echo Touch support already exists ...
 else
 sudo cat <<EOT >>"$NINENINERULES"
-SUBSYSTEM=="input*", PROGRAM="/bin/sh -c '\ 
-        chown -R root:input /sys/class/input/*/ && chmod -R 770 /sys/class/input/*/;\ 
+SUBSYSTEM=="input*", PROGRAM="/bin/sh -c '\
+chown -R root:input /sys/class/input/*/ && chmod -R 770 /sys/class/input/*/;\
 '"
 EOT
 fi
