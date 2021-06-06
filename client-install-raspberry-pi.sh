@@ -9,6 +9,7 @@ NINENINERULES=/etc/udev/rules.d/99-com.rules
 INSTALL_DIRECTORY=$HOME # current user's home dir as default
 FOLDER_NAME=stream-pi-client/
 GPU_MEM=128
+DOWNLOAD_LINK=https://github.com/stream-pi/client/releases/download/1.0.0/client-linux-arm7-1.0.0-EA+2.zip
 
 
 
@@ -58,6 +59,12 @@ fi
 if [[ ! -z "$1" ]]; then
    INSTALL_DIRECTORY="$1"
 fi
+
+# set custom download link if provided
+if [[ ! -z "$2" ]]; then
+   DOWNLOAD_LINK="$1"
+fi
+
 
 echo Stream-Pi Client Installer Script For Raspberry Pi
 echo Version "$VERSION"
