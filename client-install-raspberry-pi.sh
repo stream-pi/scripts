@@ -123,7 +123,7 @@ echo Adding touch support ...
 # Check if already exists 
 
 
-if grep -q -E "chown -R root:input /sys/class/input/\*/ && chmod -R 770 /sys/class/input/\*/;" /etc/udev/rules.d/99-com.rules ; then
+if grep -q -E "chown -R root:input /sys/class/input/\*/ && chmod -R 770 /sys/class/input/\*/;" "$NINENINERULES" ; then
 echo Touch support already exists ...
 else
 sudo tee -a "$NINENINERULES" > /dev/null <<EOT
