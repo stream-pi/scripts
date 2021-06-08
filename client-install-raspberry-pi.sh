@@ -8,7 +8,7 @@ CONFIG=/boot/config.txt
 NINENINERULES=/etc/udev/rules.d/99-com.rules
 INSTALL_DIRECTORY=$HOME # current user's home dir as default
 FOLDER_NAME=stream-pi-client/
-GPU_MEM=128
+GPU_MEM=256
 DOWNLOAD_LINK=https://github.com/stream-pi/client/releases/download/1.0.0/client-linux-arm7-1.0.0-EA+2.zip
 
 
@@ -55,15 +55,27 @@ if ! is_pi ; then
    exit 1
 fi
 
-# set custom installation directory if provided
-if [[ ! -z "$1" ]]; then
-   INSTALL_DIRECTORY="$1"
-fi
-
 # set custom download link if provided
-if [[ ! -z "$2" ]]; then
+if [[ ! -z "$1" ]]; then
    DOWNLOAD_LINK="$1"
 fi
+
+# set custom GPU memory split if provided
+if [[ ! -z "$2" ]]; then
+   GPU_MEM="$2"
+fi
+
+# set custom installation directory if provided
+if [[ ! -z "$3" ]]; then
+   INSTALL_DIRECTORY="$3"
+fi
+
+# set custom folder if provided
+if [[ ! -z "$4" ]]; then
+   FOLDER_NAME="$4"
+fi
+
+
 
 
 echo Stream-Pi Client Installer Script For Raspberry Pi
