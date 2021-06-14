@@ -8,7 +8,7 @@ CONFIG=/boot/config.txt
 NINENINERULES=/etc/udev/rules.d/99-com.rules
 INSTALL_DIRECTORY=$HOME # current user's home dir as default
 FOLDER_NAME=stream-pi-client/
-GPU_MEM=256
+GPU_MEM=128
 DOWNLOAD_LINK=https://github.com/stream-pi/client/releases/download/1.0.0/client-linux-arm7-1.0.0-EA+2.zip
 
 
