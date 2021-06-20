@@ -141,7 +141,7 @@ echo Setting gpu_mem to "$GPU_MEM" MB ...
 
 sudo sed "$CONFIG" -i -e "s/^gpu_mem=/#gpu_mem=/g"
 sudo sed "$CONFIG" -i -e "s/^#gpu_mem=$GPU_MEM/gpu_mem=$GPU_MEM/g"
-if ! sudo sed -n "/\[all\]/,/\[/ !p" "$CONFIG" | grep -q "^gpu_mem=$GPU_MEM" ; then
+if ! sudo sed -n "/\[pi4\]/,/\[/ !p" "$CONFIG" | grep -q "^gpu_mem=$GPU_MEM" ; then
 	sudo sh -c "printf 'gpu_mem=$GPU_MEM\n' >> $CONFIG"
 fi
 
