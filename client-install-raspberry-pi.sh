@@ -109,6 +109,7 @@ if ! axel -a -n 4 --output=spi.zip https://github.com/stream-pi/client/releases/
 fi
 
 echo Previous Clean up ...
+rm -rf ~/Stream-Pi/
 rm -rf "$FOLDER_NAME"
 
 
