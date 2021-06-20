@@ -12,29 +12,8 @@ GPU_MEM=128
 DOWNLOAD_LINK=https://github.com/stream-pi/client/releases/download/1.0.0/client-linux-arm7-1.0.0-EA+2.zip
 
 
-
-
 # Necessary Methods
 
-set_config_var() {
-  local key=assert(arg[1])
-local value=assert(arg[2])
-local fn=assert(arg[3])
-local file=assert(io.open(fn))
-local made_change=false
-for line in file:lines() do
-  if line:match("^#?%s*"..key.."=.*$") then
-    line=key.."="..value
-    made_change=true
-  end
-  print(line)
-end
-
-if not made_change then
-  print(key.."="..value)
-end
-EOF
-}
 
 is_pi() {
   ARCH=$(dpkg --print-architecture)
@@ -101,7 +80,7 @@ fi
 echo Downloading Client ...
 
 cd "$HOME"
-if ! axel -a -n 4 --output=spi.zip https://github.com/stream-pi/client/releases/download/1.0.0/client-linux-arm7-1.0.0-EA+2.zip ; then
+if ! axel -a -n 4 --output=spi.zip $DOWNLOAD_LINK ; then
    echo Unable to Download. Quitting ...
    exit 1
 fi
@@ -152,7 +131,7 @@ echo Turning ON FAKE KMS Driver ...
 sudo sed "$CONFIG" -i -e "s/^dtoverlay=vc4-kms-v3d/#dtoverlay=vc4-kms-v3d/g"
 sudo sed "$CONFIG" -i -e "s/^#dtoverlay=vc4-fkms-v3d/dtoverlay=vc4-fkms-v3d/g"
 if ! sudo sed -n "/\[pi4\]/,/\[/ !p" "$CONFIG" | grep -q "^dtoverlay=vc4-fkms-v3d" ; then
-   printf "[all]\ndtoverlay=vc4-fkms-v3d\n" | sudo tee "$CONFIG"
+	sudo sh -c "printf 'dtoverlay=vc4-fkms-v3d\n' >> $CONFIG"
 fi
 
 
@@ -160,7 +139,12 @@ fi
 
 echo Setting gpu_mem to "$GPU_MEM" MB ...
 
-set_config_var gpu_mem "$GPU_MEM" $CONFIG
+sudo sed "$CONFIG" -i -e "s/^gpu_mem=/#gpu_mem=/g"
+sudo sed "$CONFIG" -i -e "s/^#gpu_mem=$GPU_MEM/gpu_mem=$GPU_MEM/g"
+if ! sudo sed -n "/\[all\]/,/\[/ !p" "$CONFIG" | grep -q "^gpu_mem=$GPU_MEM" ; then
+	sudo sh -c "printf 'gpu_mem=$GPU_MEM\n' >> $CONFIG"
+fi
+
 
 
 cat << EOF
@@ -173,4 +157,3 @@ EOF
 sleep 5
 
 sudo reboot
-
