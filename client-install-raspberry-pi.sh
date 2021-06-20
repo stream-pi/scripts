@@ -17,7 +17,6 @@ DOWNLOAD_LINK=https://github.com/stream-pi/client/releases/download/1.0.0/client
 # Necessary Methods
 
 set_config_var() {
-  lua - "$1" "$2" "$3" <<EOF > "$3.bak"
 local key=assert(arg[1])
 local value=assert(arg[2])
 local fn=assert(arg[3])
@@ -35,7 +34,6 @@ if not made_change then
   print(key.."="..value)
 end
 EOF
-mv "$3.bak" "$3"
 }
 
 is_pi() {
