@@ -17,7 +17,7 @@ DOWNLOAD_LINK=https://github.com/stream-pi/client/releases/download/1.0.0/client
 # Necessary Methods
 
 set_config_var() {
-local key=assert(arg[1])
+  local key=assert(arg[1])
 local value=assert(arg[2])
 local fn=assert(arg[3])
 local file=assert(io.open(fn))
