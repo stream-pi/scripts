@@ -10,11 +10,9 @@ INSTALL_DIRECTORY=$HOME # current user's home dir as default
 FOLDER_NAME=stream-pi-client/
 GPU_MEM=128
 DOWNLOAD_LINK=https://github.com/stream-pi/client/releases/download/1.0.0/client-linux-arm7-1.0.0-EA+2.zip
-
+DEBUG=0
 
 # Necessary Methods
-
-
 is_pi() {
   ARCH=$(dpkg --print-architecture)
   if [ "$ARCH" = "armhf" ] || [ "$ARCH" = "arm64" ] ; then
@@ -24,40 +22,83 @@ is_pi() {
   fi
 }
 
+usage() {
+  cat << EOF
+Usage: client-install-raspberry-pi.sh [-h | --help] [-v | --verbose]    
+                                      [-d | --download-link] [-g | --gpu-mem]    
+                                      [-i | --install-dir] [-c | --client-dir]
+
+If no arguments are provided, installation will continue using the default
+values.
+
+    -h --help           Print this message
+    -v --verbose        Print debug information
+    -d --download-link  Set custom download link for Stream-Pi client.
+                        Defaults to the latest stable release.
+    -g --gpu-mem        Set custom GPU memory split, defaults to 128.
+    -i --install-dir    Set custom root installation directory.
+                        Defaults to user's home directory.
+    -c --client-dir     Set custom directory for the client application.
+                        This will be a sub-directory under 'install-dir',
+                        defaults to 'stream-pi-client/'
+EOF
+}
+
+parse_params() {
+  while :; do
+    case "${1-}" in
+    -h | --help) usage && exit 0 ;;
+    -v | --verbose) DEBUG=1 ;;
+    -d | --download-link)
+      DOWNLOAD_LINK="${2-}"
+      shift
+      ;;
+    -g | --gpu-mem)
+      GPU_MEM="${2-}"
+      shift
+      ;;
+    -i | --install-dir)
+      INSTALL_DIRECTORY="${2-}"
+      shift
+      ;;
+    -c | --client-dir)
+      FOLDER_NAME="${2-}"
+      shift
+      ;;
+    *) break ;;
+    esac
+    shift
+  done
+}
+
+print_params() {
+  cat << EOF
+
+Installation params:
+---
+DOWNLOAD_LINK=$DOWNLOAD_LINK
+GPU_MEM=$GPU_MEM
+INSTALL_DIRECTORY=$INSTALL_DIRECTORY
+FOLDER_NAME=$FOLDER_NAME
+---
+
+EOF
+}
 
 # Check whether this is even a pi or not
-
-if ! is_pi ; then
-   echo This is not a Pi. This script is only for Raspberry Pi Devices.
-   exit 1
+if ! is_pi; then
+  echo This is not a Pi. This script is only for Raspberry Pi Devices.
+  exit 1
 fi
-
-# set custom download link if provided
-if [[ ! -z "$1" ]]; then
-   DOWNLOAD_LINK="$1"
-fi
-
-# set custom GPU memory split if provided
-if [[ ! -z "$2" ]]; then
-   GPU_MEM="$2"
-fi
-
-# set custom installation directory if provided
-if [[ ! -z "$3" ]]; then
-   INSTALL_DIRECTORY="$3"
-fi
-
-# set custom folder if provided
-if [[ ! -z "$4" ]]; then
-   FOLDER_NAME="$4"
-fi
-
-
-
 
 echo Stream-Pi Client Installer Script For Raspberry Pi
 echo Version "$VERSION"
 
+parse_params "$@"
+
+if [ "$DEBUG" -eq 1 ]; then
+  print_params
+fi
 
 # Install required dependencies ...
 
