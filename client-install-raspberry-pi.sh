@@ -212,7 +212,7 @@ Exec=$INSTALL_DIRECTORY/$FOLDER_NAME/run_desktop
 Terminal=false 
 EOT
 
-chmod +x "$DESKTOP_SHORTCUT"
+chmod +x "${DESKTOP_SHORTCUT}"
 
 fi
 
