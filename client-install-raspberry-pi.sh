@@ -8,6 +8,9 @@ CONFIG=/boot/config.txt
 NINENINERULES=/etc/udev/rules.d/99-com.rules
 INSTALL_DIRECTORY=$HOME # current user's home dir as default
 FOLDER_NAME=stream-pi-client/
+DESKTOP_SHORTCUT='$HOME/Desktop/Stream-Pi Client.desktop'
+CREATE_SHORTCUT=true
+SLEEP_DURATION=10
 GPU_MEM=128
 DOWNLOAD_LINK=https://github.com/stream-pi/client/releases/download/1.0.0/client-linux-arm7-1.0.0-EA+2.zip
 DEBUG=0
@@ -41,6 +44,7 @@ values.
     -c --client-dir     Set custom directory for the client application.
                         This will be a sub-directory under 'install-dir',
                         defaults to 'stream-pi-client/'
+    -s --skip-shortcut  Does not create shortcut in Desktop
 EOF
 }
 
@@ -63,6 +67,10 @@ parse_params() {
       ;;
     -c | --client-dir)
       FOLDER_NAME="${2-}"
+      shift
+      ;;
+    -s | --skip-shortcut)
+      CREATE_SHORTCUT=false
       shift
       ;;
     *) break ;;
@@ -187,14 +195,42 @@ if ! sudo sed -n "/\[pi4\]/,/\[/ !p" "$CONFIG" | grep -q "^gpu_mem=$GPU_MEM" ; t
 fi
 
 
+# Create desktop shortcut
+
+if [ "$CREATE_SHORTCUT" == true ]; then
+
+echo Creating desktop shortcut : "$DESKTOP_SHORTCUT"
+
+sudo tee -a "$DESKTOP_SHORTCUT" > /dev/null <<EOT
+[Desktop Entry] 
+Type=Application
+Encoding=UTF-8
+Name=Stream-Pi Client (Desktop Mode)
+Comment=Cross Platform Macropad Software
+Icon=$INSTALL_DIRECTORY/$FOLDER_NAME/app-icon.png
+Exec=$INSTALL_DIRECTORY/$FOLDER_NAME/run_desktop
+Terminal=false 
+EOT
+
+chmod +x $DESKTOP_SHORTCUT
+
+fi
+
+
+# Finish Message
 
 cat << EOF
-Stream-Pi Client is installed. However your Pi needs to be restarted
+Stream-Pi Client is now successfully installed. However your Pi needs to be restarted
 After Restart, You may cd to "$INSTALL_DIRECTORY/$FOLDER_NAME"
-and run './run_console' or './run_desktop'
-Restarting in 5 seconds ...
+
+and run './run_console' to run in Console mode using KMS Driver (Recommended)
+or run './run_desktop' to run in Desktop Mode without hardware acceleration.
+
+There is also a shortcut created on your desktop to run Stream-Pi Client in Desktop Mode/
+
+Restarting in $SLEEP_DURATION seconds ...
 EOF
 
-sleep 5
+sleep $SLEEP_DURATION
 
 sudo reboot
