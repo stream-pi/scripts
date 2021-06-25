@@ -197,6 +197,11 @@ fi
 
 # Create desktop shortcut
 
+if [! -d "${HOME}/Desktop/" ] && [ "$CREATE_SHORTCUT" == true]; then
+echo "Skip create desktop shortcut because no home Desktop folder found.
+CREATE_SHORTCUT=false
+fi
+
 if [ "$CREATE_SHORTCUT" == true ]; then
 
 sudo rm -rf "${DESKTOP_SHORTCUT}"
@@ -225,13 +230,17 @@ cat << EOF
 Stream-Pi Client is now successfully installed. However your Pi needs to be restarted
 After Restart, You may cd to "$INSTALL_DIRECTORY/$FOLDER_NAME"
 
-and run './run_console' to run in Console mode using KMS Driver (Recommended)
+and run './run_console' to run in Console mode using KMS Driver (Recommended) 
 or run './run_desktop' to run in Desktop Mode without hardware acceleration.
 
-There is also a shortcut created on your desktop to run Stream-Pi Client in Desktop Mode/
-
-Restarting in $SLEEP_DURATION seconds ...
 EOF
+
+if [ "$CREATE_SHORTCUT" == true ]; then
+echo A desktop shortcut has also been created if you want to use Stream-Pi Client in Desktop Mode
+fi
+
+echo Restarting in $SLEEP_DURATION seconds ...
+
 
 sleep $SLEEP_DURATION
 
