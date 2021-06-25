@@ -30,10 +30,8 @@ usage() {
 Usage: client-install-raspberry-pi.sh [-h | --help] [-v | --verbose]    
                                       [-d | --download-link] [-g | --gpu-mem]    
                                       [-i | --install-dir] [-c | --client-dir]
-
 If no arguments are provided, installation will continue using the default
 values.
-
     -h --help           Print this message
     -v --verbose        Print debug information
     -d --download-link  Set custom download link for Stream-Pi client.
@@ -81,7 +79,6 @@ parse_params() {
 
 print_params() {
   cat << EOF
-
 Installation params:
 ---
 DOWNLOAD_LINK=$DOWNLOAD_LINK
@@ -89,7 +86,6 @@ GPU_MEM=$GPU_MEM
 INSTALL_DIRECTORY=$INSTALL_DIRECTORY
 FOLDER_NAME=$FOLDER_NAME
 ---
-
 EOF
 }
 
@@ -197,10 +193,11 @@ fi
 
 # Create desktop shortcut
 
-if [! -d "${HOME}/Desktop/" ] && [ "$CREATE_SHORTCUT" == true]; then
-echo "Skip create desktop shortcut because no home Desktop folder found.
+if [ ! -d "${HOME}/Desktop" ] &&  [ "$CREATE_SHORTCUT" == true ]; then
+echo Skip create Desktop shortcut since "${HOME}/Desktop" does not exist.
 CREATE_SHORTCUT=false
 fi
+
 
 if [ "$CREATE_SHORTCUT" == true ]; then
 
@@ -209,14 +206,14 @@ sudo rm -rf "${DESKTOP_SHORTCUT}"
 echo Creating desktop shortcut : "$DESKTOP_SHORTCUT"
 
 tee -a "$DESKTOP_SHORTCUT" > /dev/null <<EOT
-[Desktop Entry] 
+[Desktop Entry]
 Type=Application
 Encoding=UTF-8
 Name=Stream-Pi Client (Desktop Mode)
 Comment=Cross Platform Macropad Software
 Icon=$INSTALL_DIRECTORY/$FOLDER_NAME/app-icon.png
 Exec=$INSTALL_DIRECTORY/$FOLDER_NAME/run_desktop
-Terminal=false 
+Terminal=false
 EOT
 
 chmod +x "${DESKTOP_SHORTCUT}"
@@ -229,17 +226,15 @@ fi
 cat << EOF
 Stream-Pi Client is now successfully installed. However your Pi needs to be restarted
 After Restart, You may cd to "$INSTALL_DIRECTORY/$FOLDER_NAME"
-
-and run './run_console' to run in Console mode using KMS Driver (Recommended) 
+and run './run_console' to run in Console mode using KMS Driver (Recommended)
 or run './run_desktop' to run in Desktop Mode without hardware acceleration.
 EOF
 
 if [ "$CREATE_SHORTCUT" == true ]; then
-echo A desktop shortcut has also been created if you want to use Stream-Pi Client in Desktop Mode
+echo A desktop shortcut has also been created in $HOME/Desktop for ease of use.
 fi
 
 echo Restarting in $SLEEP_DURATION seconds ...
-
 
 sleep $SLEEP_DURATION
 
