@@ -232,7 +232,6 @@ After Restart, You may cd to "$INSTALL_DIRECTORY/$FOLDER_NAME"
 
 and run './run_console' to run in Console mode using KMS Driver (Recommended) 
 or run './run_desktop' to run in Desktop Mode without hardware acceleration.
-
 EOF
 
 if [ "$CREATE_SHORTCUT" == true ]; then
