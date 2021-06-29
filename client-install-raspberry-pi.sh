@@ -12,7 +12,7 @@ DESKTOP_SHORTCUT="${HOME}/Desktop/Stream-Pi Client.desktop"
 CREATE_SHORTCUT=true
 SLEEP_DURATION=10
 GPU_MEM=128
-DOWNLOAD_LINK=https://github.com/stream-pi/client/releases/download/1.0.0/client-linux-arm7-1.0.0-EA+2.zip
+DOWNLOAD_LINK=https://github.com/stream-pi/client/releases/download/1.0.0-EA%2B3/stream-pi-client-linux-arm32-1.0.0-EA+3-executable.zip
 DEBUG=0
 
 # Necessary Methods
