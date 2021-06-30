@@ -228,6 +228,8 @@ Stream-Pi Client is now successfully installed. However your Pi needs to be rest
 After Restart, You may cd to "$INSTALL_DIRECTORY/$FOLDER_NAME"
 and run './run_console' to run in Console mode using KMS Driver (Recommended)
 or run './run_desktop' to run in Desktop Mode without hardware acceleration.
+
+WARNING: You cannot run Stream-Pi Client as desktop mode while you are in console mode, and vice versa.
 EOF
 
 if [ "$CREATE_SHORTCUT" == true ]; then
