@@ -130,9 +130,14 @@ if ! axel -a -n 4 --output=spi.zip $DOWNLOAD_LINK ; then
    exit 1
 fi
 
+
+if [ -d "${HOME}/Stream-Pi/" ] ||  [ -d "$INSTALL_DIRECTORY/$FOLDER_NAME" ]; then
 echo Previous Clean up ...
-rm -rf ~/Stream-Pi/
-rm -rf "$FOLDER_NAME"
+rm -rf "${HOME}/Stream-Pi/"
+rm -rf "$INSTALL_DIRECTORY/$FOLDER_NAME"
+fi
+
+
 
 
 
