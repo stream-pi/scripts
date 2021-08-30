@@ -125,7 +125,7 @@ fi
 echo Downloading Client ...
 
 cd "$HOME"
-if ! axel -a -n 4 --output=spi.zip $DOWNLOAD_LINK ; then
+if ! axel -k -a -n 4 --output=spi.zip $DOWNLOAD_LINK ; then
    echo Unable to Download. Quitting ...
    exit 1
 fi
