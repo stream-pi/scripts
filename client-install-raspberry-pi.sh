@@ -127,7 +127,7 @@ echo Downloading Client ...
 
 cd "$HOME"
 # if ! axel -k -a -n 4 --output=spi.zip $DOWNLOAD_LINK ; then
-if ! wget -O spi.zip $DOWNLOAD_LINK ; then
+if ! curl $DOWNLOAD_LINK --output spi.zip ; then
    echo Unable to Download. Quitting ...
    exit 1
 fi
