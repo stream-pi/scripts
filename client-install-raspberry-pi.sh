@@ -113,8 +113,7 @@ if ! sudo apt -y update ; then
    exit 1
 fi
 
-# if ! sudo apt -y install unzip axel libegl-mesa0 libegl1 libgbm1 libgles2 libpango-1.0.0 libpangoft2-1.0.0 libgl1-mesa-dri gldriver-test ; then
-if ! sudo apt -y install unzip libegl-mesa0 libegl1 libgbm1 libgles2 libpango-1.0.0 libpangoft2-1.0.0 libgl1-mesa-dri gldriver-test ; then
+if ! sudo apt -y install unzip axel libegl-mesa0 libegl1 libgbm1 libgles2 libpango-1.0.0 libpangoft2-1.0.0 libgl1-mesa-dri gldriver-test ; then
    echo Unable to install required dependencies. Quitting ...
    exit 1
 fi
@@ -126,8 +125,7 @@ fi
 echo Downloading Client ...
 
 cd "$HOME"
-# if ! axel -k -a -n 4 --output=spi.zip $DOWNLOAD_LINK ; then
-if ! curl $DOWNLOAD_LINK --output spi.zip ; then
+if ! axel -k -a -n 4 --output=spi.zip $DOWNLOAD_LINK ; then
    echo Unable to Download. Quitting ...
    exit 1
 fi
