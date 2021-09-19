@@ -21,6 +21,7 @@ $ ./client-install-raspberry-pi.sh -h
 Usage: client-install-raspberry-pi.sh [-h | --help] [-v | --verbose]    
                                       [-d | --download-link] [-g | --gpu-mem]    
                                       [-i | --install-dir] [-c | --client-dir]
+                                      [-s | --skip-shortcut]
 
 If no arguments are provided, installation will continue using the default
 values.
@@ -35,6 +36,7 @@ values.
     -c --client-dir     Set custom directory for the client application.
                         This will be a sub-directory under 'install-dir',
                         defaults to 'stream-pi-client/'
+    -s --skip-shortcut  Does not create shortcut in Desktop
 ```
 
 To customize your installation, pass in one or more options to the script.

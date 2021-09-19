@@ -30,6 +30,8 @@ usage() {
 Usage: client-install-raspberry-pi.sh [-h | --help] [-v | --verbose]    
                                       [-d | --download-link] [-g | --gpu-mem]    
                                       [-i | --install-dir] [-c | --client-dir]
+                                      [-s | --skip-shortcut]
+
 If no arguments are provided, installation will continue using the default
 values.
     -h --help           Print this message
