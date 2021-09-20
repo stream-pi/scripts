@@ -3,7 +3,7 @@
 # Stream-Pi Client Installer Script for Raspberry Pi 
 # This Script heavily makes use of some code from the official raspi-config script (https://github.com/RPi-Distro/raspi-config)
 
-VERSION=1.0.0
+VERSION=1.1.0
 CONFIG=/boot/config.txt
 NINENINERULES=/etc/udev/rules.d/99-com.rules
 INSTALL_DIRECTORY=$HOME # current user's home dir as default
