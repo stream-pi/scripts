@@ -14,6 +14,7 @@ SLEEP_DURATION=10
 GPU_MEM=128
 DOWNLOAD_LINK=https://github.com/stream-pi/client/releases/download/1.0.0-EA%2B3/stream-pi-client-linux-arm32-1.0.0-EA+3-executable.zip
 DEBUG=0
+CHANGE_BACKLIGHT_PERMISSIONS=true
 
 # Necessary Methods
 is_pi() {
@@ -30,7 +31,7 @@ usage() {
 Usage: client-install-raspberry-pi.sh [-h | --help] [-v | --verbose]    
                                       [-d | --download-link] [-g | --gpu-mem]    
                                       [-i | --install-dir] [-c | --client-dir]
-                                      [-s | --skip-shortcut]
+                                      [-s | --skip-shortcut] [-b | --backlight-no]
 
 If no arguments are provided, installation will continue using the default
 values.
@@ -45,6 +46,7 @@ values.
                         This will be a sub-directory under 'install-dir',
                         defaults to 'stream-pi-client/'
     -s --skip-shortcut  Does not create shortcut in Desktop
+    -b --backlight-no   Does not modify Official Screen backlight persmissions.
 EOF
 }
 
@@ -71,6 +73,10 @@ parse_params() {
       ;;
     -s | --skip-shortcut)
       CREATE_SHORTCUT=false
+      shift
+      ;;
+    -b | --backlight-no)
+      CHANGE_BACKLIGHT_PERMISSIONS=false
       shift
       ;;
     *) break ;;
@@ -178,9 +184,10 @@ fi
 
 # Allow non-root change of backlight power
 
+if [ "$CHANGE_BACKLIGHT_PERMISSIONS" == true ]; then
 echo Adding backlight power change permission ...
 echo 'SUBSYSTEM=="backlight",RUN+="/bin/chmod 666 /sys/class/backlight/%k/brightness /sys/class/backlight/%k/bl_power"' | sudo tee -a /etc/udev/rules.d/backlight-permissions.rules
-
+fi
 
 # Turn on FAKE KMS Driver
 
