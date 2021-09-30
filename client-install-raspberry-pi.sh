@@ -176,6 +176,12 @@ EOT
 fi
 
 
+# Allow non-root change of backlight power
+
+echo Adding backlight power change permission ...
+echo 'SUBSYSTEM=="backlight",RUN+="/bin/chmod 666 /sys/class/backlight/%k/brightness /sys/class/backlight/%k/bl_power"' | sudo tee -a /etc/udev/rules.d/backlight-permissions.rules
+
+
 # Turn on FAKE KMS Driver
 
 echo Turning ON FAKE KMS Driver ...
@@ -185,6 +191,7 @@ sudo sed "$CONFIG" -i -e "s/^dtoverlay=vc4-fkms-v3d/ /g"
 if ! sudo sed -n "/\[pi4\]/,/\[/ !p" "$CONFIG" | grep -q "^dtoverlay=vc4-fkms-v3d" ; then
 	sudo sh -c "printf 'dtoverlay=vc4-fkms-v3d\n' >> $CONFIG"
 fi
+
 
 
 # Add GPU MEM
