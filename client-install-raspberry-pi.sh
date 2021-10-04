@@ -282,19 +282,13 @@ chmod +x jre/bin/java
 
 # Add support for touch 
 
-if grep -q -E "chown -R root:input /sys/class/input/\*/ && chmod -R 770 /sys/class/input/\*/;" "$NINE_NINE_RULES_FILE" ; then
-echo Touch support already exists ...
-else
-if [ "$ADD_TOUCH_SUPPORT" == true]; then
-
+if [ ! grep -q -E "chown -R root:input /sys/class/input/\*/ && chmod -R 770 /sys/class/input/\*/;" "$NINE_NINE_RULES_FILE" ] && [ "$ADD_TOUCH_SUPPORT" == true ]; then
 echo $'\nAdding touch support ...'
-
 sudo tee -a "$NINE_NINE_RULES_FILE" > /dev/null <<EOT
 SUBSYSTEM=="input*", PROGRAM="/bin/sh -c '\
 chown -R root:input /sys/class/input/*/ && chmod -R 770 /sys/class/input/*/;\
 '"
 EOT
-fi
 fi
 
 
