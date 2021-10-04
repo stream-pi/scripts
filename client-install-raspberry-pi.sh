@@ -375,8 +375,6 @@ fi
 # Create desktop shortcut
 
 if [ ! -d "${HOME}/Desktop" ] &&  [ "$CREATE_SHORTCUT" == true ]; then
-echo
-echo Skip create Desktop shortcut since "${HOME}/Desktop" does not exist.
 CREATE_SHORTCUT=false
 fi
 
