@@ -344,7 +344,7 @@ You can later disable or enable the KMS driver using the "raspi-config" tool, or
 
 Do you want to turn on the KMS Driver ? [Y/N]
 EOF
-read -n 1 -r
+read -n 1 -r </dev/tty
 echo  
 if [[ $REPLY =~ ^[Yy]$ ]]; then
   enable_kms
@@ -422,7 +422,7 @@ echo A desktop shortcut has also been created in $HOME/Desktop for ease of use.
 fi
 
 echo $'\nRestart now? [Y/N]\n'
-read -n 1 -r
+read -n 1 -r </dev/tty
 echo  
 if [[ $REPLY =~ ^[Yy]$ ]]; then
   sudo reboot
