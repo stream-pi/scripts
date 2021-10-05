@@ -29,24 +29,32 @@ GPU_MEM=128
 DEBUG=0
 CHANGE_BACKLIGHT_PERMISSIONS=true
 AXEL_THREADS=4
-
+DOWNLOAD=true
+ZIP_FILE="spi.zip"
+PRESERVE_DATA=false
+ADD_TOUCH_SUPPORT=true
 SKIP_KMS_PROMPT=0
 # SKIP_KMS_PROMPT details
 # 0 = DONT SKIP
 # 1 = SKIP AND ENABLE 
 # 2 = SKIP AND DONT ENABLE
 
-DOWNLOAD=true
-ZIP_FILE="spi.zip"
 
-
-PRESERVE_DATA=false
-ADD_TOUCH_SUPPORT=true
 
 # Necessary Methods
 is_pi() {
   ARCH=$(dpkg --print-architecture)
   if [ "$ARCH" = "armhf" ] || [ "$ARCH" = "arm64" ] ; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+is_fkms() {
+  if grep -s -q okay /proc/device-tree/soc/v3d@7ec00000/status \
+                     /proc/device-tree/soc/firmwarekms@7e600000/status \
+                     /proc/device-tree/v3dbus/v3d@7ec04000/status; then
     return 0
   else
     return 1
@@ -314,6 +322,8 @@ enable_kms() {
 
 }
 
+if [ is_fkms == 0 ]; then
+
 if [ "$SKIP_KMS_PROMPT" == 0 ]; then
 cat << EOF
 
@@ -349,6 +359,7 @@ elif [ "$SKIP_KMS_PROMPT" == 1 ]; then
   enable_kms
 fi
 
+fi
 
 
 
