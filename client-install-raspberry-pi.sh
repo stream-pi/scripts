@@ -15,7 +15,7 @@
 
 # Installer Script for Raspberry Pi 
 
-VERSION=2.0
+VERSION=2.1
 DOWNLOAD_LINK=https://github.com/stream-pi/client/releases/download/1.0.0-EA%2B3/stream-pi-client-linux-arm32-1.0.0-EA+3-executable.zip
 CONFIG=/boot/config.txt
 NINE_NINE_RULES_FILE=/etc/udev/rules.d/99-com.rules
@@ -33,6 +33,7 @@ DOWNLOAD=true
 ZIP_FILE="spi.zip"
 PRESERVE_DATA=false
 ADD_TOUCH_SUPPORT=true
+USE_WGET=false
 SKIP_KMS_PROMPT=0
 # SKIP_KMS_PROMPT details
 # 0 = DONT SKIP
@@ -70,6 +71,7 @@ Usage:  [-h | --help] [-v | --verbose]
         [-ky | --enable-kms] [-kn | --dont-enable-kms] 
         [-z | --zip] [-p | --preserve-old-data]
         [-t | --dont-add-touch] [-at | --axel-threads]
+        [-uw | --use-wget]
 
 If no arguments are provided, installation will continue using the default
 values.
@@ -93,6 +95,7 @@ values.
     -t  --dont-add-touch      Does not add touch support. 
                               Not recommended if Client is to be used in Console mode.
     -at --axel-threads        Specify number of axel threads while downloading. Default is 4.
+    -uw --use-wget            Use wget instead of axel to download.
 EOF
 }
 
@@ -118,19 +121,15 @@ parse_params() {
       ;;
     -s | --skip-shortcut)
       CREATE_SHORTCUT=false
-      # shift
       ;;
     -b | --backlight-no)
       CHANGE_BACKLIGHT_PERMISSIONS=false
-      # shift
       ;;
     -ky | --enable-kms)
       SKIP_KMS_PROMPT=1
-      # shift
       ;;
     -kn | --dont-enable-kms)
       SKIP_KMS_PROMPT=2
-      # shift
       ;;
     -z | --zip-file)
       DOWNLOAD=false
@@ -139,15 +138,16 @@ parse_params() {
       ;;
     -p | --preserve-old-data)
       PRESERVE_DATA=true
-      # shift
       ;;
     -t | --dont-add-touch)
       ADD_TOUCH_SUPPORT=false
-      # shift
       ;;
     -at | --axel-threads)
       AXEL_THREADS=${2-}
       shift
+      ;;
+    -uw | --use-wget)
+      USE_WGET=true
       ;;
     *) 
       if [ ! -z "${1-}" -a "${1-}" != " " ]; then
@@ -178,6 +178,7 @@ DOWNLOAD=$DOWNLOAD
 ZIP_FILE=$ZIP_FILE
 ADD_TOUCH_SUPPORT=$ADD_TOUCH_SUPPORT
 AXEL_THREADS=$AXEL_THREADS
+USE_WGET=$USE_WGET
 ---
 EOF
 }
@@ -262,10 +263,24 @@ if [ "$DOWNLOAD" == true ]; then
 echo $'\nDownloading Client ...'
 
 cd "$HOME"
+
+if [ "$USE_WGET" == true]; then
+
+if ! wget $DOWNLOAD_LINK -O "$ZIP_FILE" ; then
+   echo Unable to Download. Quitting ...
+   exit 1
+fi
+
+else
+
 if ! axel -k -a -n $AXEL_THREADS --output="$ZIP_FILE" $DOWNLOAD_LINK ; then
    echo Unable to Download. Quitting ...
    exit 1
 fi
+
+fi
+
+
 fi
 
 
