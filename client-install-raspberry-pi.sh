@@ -228,7 +228,7 @@ EOF
 
 echo $'\nInstalling required dependencies ...'
 
-if [ ! sudo apt-get --allow-releaseinfo-change update ]; then
+if ! sudo apt-get --allow-releaseinfo-change update ; then
    echo Unable to run apt update. Check internet connection / permissions. Quitting ...
    exit 1
 fi
