@@ -239,7 +239,7 @@ fi
 
 echo $'\nInstalling required dependencies ...'
 
-if ! sudo apt-get install unzip axel libegl-mesa0 libegl1 libgbm1 libgles2 libpango-1.0.0 libpangoft2-1.0.0 libgl1-mesa-dri gldriver-test ; then
+if ! sudo apt-get install wget unzip axel libegl-mesa0 libegl1 libgbm1 libgles2 libpango-1.0.0 libpangoft2-1.0.0 libgl1-mesa-dri gldriver-test ; then
    echo Unable to install required dependencies. Quitting ...
    exit 1
 fi
