@@ -224,15 +224,20 @@ cat << EOF
 EOF
 
 
-# Installing required dependencies ...
+# Update ...
 
-echo $'\nInstalling required dependencies ...'
+echo $'\nUpdate ...'
 
 sudo apt-get --allow-releaseinfo-change update
 if [ $? -ne 0 ]; then
    echo Unable to run apt update. Check internet connection / permissions. Quitting ...
    exit 1
 fi
+
+
+# Installing required dependencies ...
+
+echo $'\nInstalling required dependencies ...'
 
 if ! sudo apt-get install unzip axel libegl-mesa0 libegl1 libgbm1 libgles2 libpango-1.0.0 libpangoft2-1.0.0 libgl1-mesa-dri gldriver-test ; then
    echo Unable to install required dependencies. Quitting ...
