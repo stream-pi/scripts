@@ -228,12 +228,12 @@ EOF
 
 echo $'\nInstalling required dependencies ...'
 
-if [ ! sudo apt -y update –allow-releaseinfo-change ]; then
+if [ ! sudo apt-get --allow-releaseinfo-change update ]; then
    echo Unable to run apt update. Check internet connection / permissions. Quitting ...
    exit 1
 fi
 
-if ! sudo apt -y install unzip axel libegl-mesa0 libegl1 libgbm1 libgles2 libpango-1.0.0 libpangoft2-1.0.0 libgl1-mesa-dri gldriver-test ; then
+if ! sudo apt-get install unzip axel libegl-mesa0 libegl1 libgbm1 libgles2 libpango-1.0.0 libpangoft2-1.0.0 libgl1-mesa-dri gldriver-test ; then
    echo Unable to install required dependencies. Quitting ...
    exit 1
 fi
@@ -264,7 +264,7 @@ echo $'\nDownloading Client ...'
 
 cd "$HOME"
 
-if [ "$USE_WGET" == true]; then
+if [ "$USE_WGET" == true ]; then
 
 if ! wget $DOWNLOAD_LINK -O "$ZIP_FILE" ; then
    echo Unable to Download. Quitting ...
