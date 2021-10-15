@@ -11,7 +11,7 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
-# Original Authors : Jordan Duabe (@j4ckofalltrades), Debayan Sutradhar (@rnayabed)
+# Original Authors : Debayan Sutradhar (@rnayabed), Jordan Duabe (@j4ckofalltrades)
 
 # Installer Script for Raspberry Pi 
 
