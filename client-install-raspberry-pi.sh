@@ -46,13 +46,13 @@ SKIP_KMS_PROMPT=0
 is_pi() {
   ARCH=$(dpkg --print-architecture)
   if [ "$ARCH" = "armhf" ] || [ "$ARCH" = "arm64" ] ; then
-    return 0
+    return true
   else
-    return 1
+    return false
   fi
 }
 
-is_fkms_enabled() {
+is_fkms() {
   if grep -s -q okay /proc/device-tree/soc/v3d@7ec00000/status \
                      /proc/device-tree/soc/firmwarekms@7e600000/status \
                      /proc/device-tree/v3dbus/v3d@7ec04000/status; then
@@ -344,7 +344,7 @@ enable_kms() {
 
 }
 
-if [ ! is_fkms_enabled ]; then
+if [ is_fkms ] && [ ! -d "/dev/dri" ]; then
 
 if [ "$SKIP_KMS_PROMPT" == 0 ]; then
 cat << EOF
