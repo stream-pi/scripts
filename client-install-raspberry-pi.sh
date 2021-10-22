@@ -52,13 +52,13 @@ is_pi() {
   fi
 }
 
-is_fkms() {
+is_fkms_enabled() {
   if grep -s -q okay /proc/device-tree/soc/v3d@7ec00000/status \
                      /proc/device-tree/soc/firmwarekms@7e600000/status \
                      /proc/device-tree/v3dbus/v3d@7ec04000/status; then
-    return 0
+    return true
   else
-    return 1
+    return false
   fi
 }
 
@@ -184,7 +184,7 @@ EOF
 }
 
 # Check whether this is a pi or not
-if ! is_pi; then
+if [ ! is_pi ]; then
   echo This script is only for Raspberry Pi Devices.
   exit 1
 fi
@@ -344,7 +344,7 @@ enable_kms() {
 
 }
 
-if [ is_fkms == 0 ]; then
+if [ ! is_fkms_enabled ]; then
 
 if [ "$SKIP_KMS_PROMPT" == 0 ]; then
 cat << EOF
