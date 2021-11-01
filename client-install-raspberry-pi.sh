@@ -306,7 +306,12 @@ echo $'\nSetting permissions ...'
 cd "$FOLDER_NAME"
 chmod +x run_console
 chmod +x run_desktop
-chmod +x jre/bin/java
+
+if [ -f jre/bin/java ]; then
+    chmod +x jre/bin/java
+fi
+
+
 
 
 # Add support for touch 
