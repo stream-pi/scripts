@@ -15,7 +15,7 @@
 
 # Installer Script for Raspberry Pi 
 
-VERSION=2.4
+VERSION=2.5
 DOWNLOAD_LINK=https://github.com/stream-pi/client/releases/download/1.0.0-EA%2B3/stream-pi-client-linux-arm32-1.0.0-EA+3-executable.zip
 CONFIG=/boot/config.txt
 NINE_NINE_RULES_FILE=/etc/udev/rules.d/99-com.rules
@@ -239,7 +239,7 @@ fi
 
 echo $'\nInstalling required dependencies ...'
 
-if [ ! sudo apt-get install wget unzip axel libegl-mesa0 libegl1 libgbm1 libgles2 libpango-1.0.0 libpangoft2-1.0.0 libgl1-mesa-dri gldriver-test ]; then
+if ! sudo apt-get install wget unzip axel libegl-mesa0 libegl1 libgbm1 libgles2 libpango-1.0.0 libpangoft2-1.0.0 libgl1-mesa-dri gldriver-test ; then
    echo Unable to install required dependencies. Quitting ...
    exit 1
 fi
