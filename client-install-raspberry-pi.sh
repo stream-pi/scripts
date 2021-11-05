@@ -15,7 +15,7 @@
 
 # Installer Script for Raspberry Pi 
 
-VERSION=2.6
+VERSION=2.7
 DOWNLOAD_LINK=https://github.com/stream-pi/client/releases/download/1.0.0-EA%2B3/stream-pi-client-linux-arm32-1.0.0-EA+3-executable.zip
 CONFIG=/boot/config.txt
 NINE_NINE_RULES_FILE=/etc/udev/rules.d/99-com.rules
@@ -415,7 +415,7 @@ if [ "${CREATE_SHORTCUT}" == true ]; then
 
 sudo rm -rf "${DESKTOP_SHORTCUT}"
 
-echo Creating desktop shortcut : "${DESKTOP_SHORTCUT}"
+echo Creating desktop shortcut : $DESKTOP_SHORTCUT
 
 tee -a "${DESKTOP_SHORTCUT}" > /dev/null <<EOT
 [Desktop Entry]
