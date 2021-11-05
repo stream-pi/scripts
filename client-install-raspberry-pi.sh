@@ -411,13 +411,13 @@ CREATE_SHORTCUT=false
 fi
 
 
-if [ "$CREATE_SHORTCUT" == true ]; then
+if [ "${CREATE_SHORTCUT}" == true ]; then
 
 sudo rm -rf "${DESKTOP_SHORTCUT}"
 
-echo $'\nCreating desktop shortcut : $DESKTOP_SHORTCUT'
+echo $'\nCreating desktop shortcut : ${DESKTOP_SHORTCUT}'
 
-tee -a "$DESKTOP_SHORTCUT" > /dev/null <<EOT
+tee -a "${DESKTOP_SHORTCUT}" > /dev/null <<EOT
 [Desktop Entry]
 Type=Application
 Encoding=UTF-8
