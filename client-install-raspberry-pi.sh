@@ -415,7 +415,7 @@ if [ "${CREATE_SHORTCUT}" == true ]; then
 
 sudo rm -rf "${DESKTOP_SHORTCUT}"
 
-echo Creating desktop shortcut : $DESKTOP_SHORTCUT
+echo Creating desktop shortcut : "${DESKTOP_SHORTCUT}"
 
 tee -a "${DESKTOP_SHORTCUT}" > /dev/null <<EOT
 [Desktop Entry]
