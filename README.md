@@ -8,7 +8,7 @@ Copy and paste the following command in your terminal. This will install the
 client using the recommended defaults.
 
 ```sh
-curl -sSL https://install.stream-pi.com/client/raspberry-pi | bash
+wget -qO - https://install.stream-pi.com/client/raspberry-pi | bash
 ```
 
 ### Configuration Options
@@ -55,7 +55,7 @@ e.g. `./client-install-raspberry-pi.sh -d <download_link> --gpu-mem 256`.
 Sample custom installation:
 
 ```sh
-curl -sSL https://install.stream-pi.com/client/raspberry-pi | bash -s -- \
+wget -qO - https://install.stream-pi.com/client/raspberry-pi | bash -s -- \
 -d <custom download link> \
 -g <GPU memory> \
 -i <install-directory-parent-directory-path> \
