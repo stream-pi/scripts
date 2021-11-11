@@ -84,7 +84,7 @@ values.
                               Defaults to user's home directory.
     -c  --client-dir          Set custom directory for the client application.
                               This will be a sub-directory under 'install-dir',
-                              defaults to 'stream-pi-client/'.
+                              defaults to 'stream-pi-client'.
     -s  --skip-shortcut       Does not create shortcut in Desktop.
     -b  --backlight-no        Does not modify Official Screen backlight persmissions.
     -ky --enable-kms          Skips user prompt and turns on KMS driver.
@@ -226,7 +226,7 @@ EOF
 
 # Update ...
 
-echo $'\nUpdate ...'
+echo -e "\nUpdate ..."
 
 sudo apt-get --allow-releaseinfo-change update
 if [ $? -ne 0 ]; then
@@ -237,7 +237,7 @@ fi
 
 # Installing required dependencies ...
 
-echo $'\nInstalling required dependencies ...'
+echo -e "\nInstalling required dependencies ..."
 
 if ! sudo apt-get install unzip axel libegl-mesa0 libegl1 libgbm1 libgles2 libpango1.0-0 libpangoft2-1.0.0 libgl1-mesa-dri gldriver-test libgtk-3-0 ; then
    echo Unable to install required dependencies. Quitting ...
@@ -248,7 +248,7 @@ fi
 # Delete old client
 
 if [ -d "$INSTALL_DIRECTORY/$FOLDER_NAME" ]; then
-echo $'\nDeleting existing Stream-Pi Client ...'
+echo -e "\nDeleting existing Stream-Pi Client ..."
 rm -rf "$INSTALL_DIRECTORY/$FOLDER_NAME"
 fi
 
@@ -256,7 +256,7 @@ fi
 
 if [ -d "${HOME}/Stream-Pi/" ]; then
   if [ "$PRESERVE_DATA" == false ]; then
-    echo $'\nDelete old data ...'
+    echo -e "\nDelete old data ..."
     rm -rf "${HOME}/Stream-Pi/"  
   fi
 fi
@@ -266,7 +266,7 @@ fi
 # Finally Download and extract
 
 if [ "$DOWNLOAD" == true ]; then
-echo $'\nDownloading Client ...'
+echo -e "\nDownloading Client ..."
 
 cd "$HOME"
 
@@ -291,18 +291,18 @@ fi
 
 
 
-echo $'\nExtracting ...'
+echo -e "\nExtracting ..."
 unzip "$ZIP_FILE" -d "$FOLDER_NAME"
 
 
 
 if [ "$DOWNLOAD" == true ]; then
-echo $'\nClean up ...'
+echo -e "\nClean up ..."
 rm -rf "$ZIP_FILE"
 fi
 
 
-echo $'\nSetting permissions ...'
+echo -e "\nSetting permissions ..."
 cd "$FOLDER_NAME"
 chmod +x run_console
 chmod +x run_desktop
@@ -318,7 +318,7 @@ fi
 
 grep -q -E "chown -R root:input /sys/class/input/\*/ && chmod -R 770 /sys/class/input/\*/;" "$NINE_NINE_RULES_FILE"
 if [ $? -ne 0 ] && [ "$ADD_TOUCH_SUPPORT" == true ]; then
-echo $'\nAdding touch support ...'
+echo -e "\nAdding touch support ..."
 sudo tee -a "$NINE_NINE_RULES_FILE" > /dev/null <<EOT
 SUBSYSTEM=="input*", PROGRAM="/bin/sh -c '\
 chown -R root:input /sys/class/input/*/ && chmod -R 770 /sys/class/input/*/;\
@@ -330,7 +330,7 @@ fi
 # Allow non-root change of backlight power
 
 if [ "$CHANGE_BACKLIGHT_PERMISSIONS" == true ]; then
-echo $'\nAdding backlight power change permission ...'
+echo -e "\nAdding backlight power change permission ..."
 sudo tee -a "$BACKLIGHT_PERMISSIONS_RULES_FILE" > /dev/null <<EOT
 SUBSYSTEM=="backlight",RUN+="/bin/chmod 666 /sys/class/backlight/%k/brightness /sys/class/backlight/%k/bl_power"
 EOT
@@ -339,7 +339,7 @@ fi
 # Turn on FAKE KMS Driver
 
 enable_kms() {
-  echo $'\nTurning ON FAKE KMS Driver ...'
+  echo -e "\nTurning ON FAKE KMS Driver ..."
 
   sudo sed "$CONFIG" -i -e "s/^dtoverlay=vc4-kms-v3d/#dtoverlay=vc4-kms-v3d/g"
   sudo sed "$CONFIG" -i -e "s/^dtoverlay=vc4-fkms-v3d/ /g"
@@ -394,8 +394,7 @@ fi
 
 # Add GPU MEM
 
-echo
-echo Setting gpu_mem to "$GPU_MEM" MB ...
+echo -e "\nSetting gpu_mem to $GPU_MEM MB ..."
 
 sudo sed "$CONFIG" -i -e "s/^gpu_mem=/#gpu_mem=/g"
 sudo sed "$CONFIG" -i -e "s/^#gpu_mem=$GPU_MEM/gpu_mem=$GPU_MEM/g"
@@ -415,8 +414,7 @@ if [ "${CREATE_SHORTCUT}" == true ]; then
 
 sudo rm -rf "${DESKTOP_SHORTCUT}"
 
-echo
-echo Creating desktop shortcut : $DESKTOP_SHORTCUT
+echo -e "\nCreating desktop shortcut : $DESKTOP_SHORTCUT"
 
 tee -a "${DESKTOP_SHORTCUT}" > /dev/null <<EOT
 [Desktop Entry]
@@ -449,10 +447,10 @@ WARNING: You cannot run Stream-Pi Client as desktop mode while you are in consol
 EOF
 
 if [ "$CREATE_SHORTCUT" == true ]; then
-echo A desktop shortcut has also been created in $HOME/Desktop for ease of use.
+echo -e "A desktop shortcut has also been created in $HOME/Desktop for ease of use."
 fi
 
-echo $'\nRestart now? [Y/N]\n'
+echo -e "\nRestart now? [Y/N]\n"
 read -n 1 -r </dev/tty
 echo  
 if [[ $REPLY =~ ^[Yy]$ ]]; then
