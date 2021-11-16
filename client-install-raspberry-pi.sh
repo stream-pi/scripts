@@ -228,7 +228,7 @@ EOF
 
 echo -e "\nUpdate ..."
 
-sudo apt-get --allow-releaseinfo-change update
+sudo apt-get update
 if [ $? -ne 0 ]; then
    echo Unable to run apt update. Check internet connection / permissions. Quitting ...
    exit 1
