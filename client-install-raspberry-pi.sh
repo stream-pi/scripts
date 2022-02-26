@@ -473,14 +473,18 @@ if [ "$CREATE_SHORTCUT" == true ]; then
 echo -e "A desktop shortcut has also been created in $HOME/Desktop for ease of use."
 fi
 
+
 if [ "$SKIP_REBOOT_PROMPT" == 0 ]; then
 echo -e "\nRestart now? [Y/N]\n"
 read -n 1 -r </dev/tty
 echo  
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-  sudo reboot
+  SKIP_REBOOT_PROMPT=1
 fi
-elif [ "$SKIP_REBOOT_PROMPT" == 1 ]; then
+fi
+
+if [ "$SKIP_REBOOT_PROMPT" == 1 ]; then
+echo Rebooting ...
 sudo reboot
 fi
 
