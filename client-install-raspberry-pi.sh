@@ -15,7 +15,7 @@
 
 # Installer Script for Raspberry Pi 
 
-VERSION=2.11
+VERSION=2.2
 DOWNLOAD_LINK=https://github.com/stream-pi/client/releases/download/1.0.0-EA%2B3/stream-pi-client-linux-arm32-1.0.0-EA+3-executable.zip
 CONFIG=/boot/config.txt
 NINE_NINE_RULES_FILE=/etc/udev/rules.d/99-com.rules
@@ -46,16 +46,6 @@ SKIP_KMS_PROMPT=0
 is_pi() {
   ARCH=$(dpkg --print-architecture)
   if [ "$ARCH" = "armhf" ] || [ "$ARCH" = "arm64" ] ; then
-    return true
-  else
-    return false
-  fi
-}
-
-is_fkms() {
-  if grep -s -q okay /proc/device-tree/soc/v3d@7ec00000/status \
-                     /proc/device-tree/soc/firmwarekms@7e600000/status \
-                     /proc/device-tree/v3dbus/v3d@7ec04000/status; then
     return true
   else
     return false
@@ -340,17 +330,16 @@ fi
 # Turn on FAKE KMS Driver
 
 enable_kms() {
-  echo -e "\nTurning ON FAKE KMS Driver ..."
+  echo -e "\nTurning ON KMS Driver ..."
 
-  sudo sed "$CONFIG" -i -e "s/^dtoverlay=vc4-kms-v3d/#dtoverlay=vc4-kms-v3d/g"
-  sudo sed "$CONFIG" -i -e "s/^dtoverlay=vc4-fkms-v3d/ /g"
-  if ! sudo sed -n "/\[pi4\]/,/\[/ !p" "$CONFIG" | grep -q "^dtoverlay=vc4-fkms-v3d" ; then
-	  sudo sh -c "printf 'dtoverlay=vc4-fkms-v3d\n' >> $CONFIG"
+  sed $CONFIG -i -e "s/^dtoverlay=vc4-fkms-v3d/#dtoverlay=vc4-fkms-v3d/g"
+  sed $CONFIG -i -e "s/^#dtoverlay=vc4-kms-v3d/dtoverlay=vc4-kms-v3d/g"
+  if ! sed -n "/\[pi4\]/,/\[/ !p" $CONFIG | grep -q "^dtoverlay=vc4-kms-v3d" ; then
+    printf "[all]\ndtoverlay=vc4-kms-v3d\n" >> $CONFIG
   fi
-
 }
 
-if [ is_fkms ] && [ ! -d "/dev/dri" ]; then
+if [ ! -d "/dev/dri" ]; then
 
 if [ "$SKIP_KMS_PROMPT" == 0 ]; then
 cat << EOF
@@ -368,7 +357,7 @@ To ensure maximum compatibility, Stream-Pi Client can also run in Desktop Mode i
 However, certain screens like the HyperPixel for Raspberry Pi conflicts with the KMS driver.
 Stream-Pi Client can still run on these screens using desktop mode.
 
-Fortunately, most screens like the Official 7" Raspberry Pi Display, Waveshare screens (including clones) work well with KMS Driver.
+Fortunately, most screens like the Official 7" Raspberry Pi Display, Waveshare screens (including clones) work well with the KMS Driver.
 
 
 
