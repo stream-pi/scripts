@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Stream-Pi - Free & Open-Source Modular Cross-Platform Programmable Macro Pad
-# Copyright (C) 2019-2021  Debayan Sutradhar (rnayabed),  Samuel Quiñones (SamuelQuinones)
+# Copyright (C) 2019-2022  Debayan Sutradhar (rnayabed),  Samuel Quiñones (SamuelQuinones)
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -15,7 +15,7 @@
 
 # Installer Script for Raspberry Pi 
 
-VERSION=2.2
+VERSION=2.3
 DOWNLOAD_LINK=https://github.com/stream-pi/client/releases/download/1.0.0-EA%2B3/stream-pi-client-linux-arm32-1.0.0-EA+3-executable.zip
 CONFIG=/boot/config.txt
 NINE_NINE_RULES_FILE=/etc/udev/rules.d/99-com.rules
@@ -36,9 +36,15 @@ ADD_TOUCH_SUPPORT=true
 USE_WGET=false
 SKIP_KMS_PROMPT=0
 # SKIP_KMS_PROMPT details
-# 0 = DONT SKIP
-# 1 = SKIP AND ENABLE 
-# 2 = SKIP AND DONT ENABLE
+# 0 = Do not skip
+# 1 = Skip and enable 
+# 2 = Skip and do not enable
+
+SKIP_REBOOT_PROMPT=0
+# SKIP_REBOOT_PROMPT details
+# 0 = Do not skip
+# 1 = Skip and reboot 
+# 2 = Skip and do not reboot
 
 
 
@@ -59,33 +65,53 @@ Usage:  [-h | --help] [-v | --verbose]
         [-i | --install-dir] [-c | --client-dir]
         [-s | --skip-shortcut] [-b | --backlight-no]
         [-ky | --enable-kms] [-kn | --dont-enable-kms] 
+        [-ry | --reboot-after-install] [-rn | --dont-reboot-after-install]
         [-z | --zip] [-p | --preserve-old-data]
         [-t | --dont-add-touch] [-at | --axel-threads]
         [-uw | --use-wget]
 
 If no arguments are provided, installation will continue using the default
 values.
-    -h  --help                Print this message.
-    -v  --verbose             Print debug information.
-    -d  --download-link       Set custom download link for Stream-Pi client.
-                              Defaults to the latest stable release.
-    -g  --gpu-mem             Set custom GPU memory split, defaults to 128.
-    -i  --install-dir         Set custom root installation directory.
-                              Defaults to user's home directory.
-    -c  --client-dir          Set custom directory for the client application.
-                              This will be a sub-directory under 'install-dir',
-                              defaults to 'stream-pi-client'.
-    -s  --skip-shortcut       Does not create shortcut in Desktop.
-    -b  --backlight-no        Does not modify Official Screen backlight persmissions.
-    -ky --enable-kms          Skips user prompt and turns on KMS driver.
-    -kn --dont-enable-kms     Skips user prompt and does not turn on KMS driver.
-    -z  --zip-file            Use custom zip instead of downloading.
-    -p  --preserve-old-data   Skips user data and preserve previous Stream-Pi data (if found).
-                              Not recommended for upgrading to different versions.
-    -t  --dont-add-touch      Does not add touch support. 
-                              Not recommended if Client is to be used in Console mode.
-    -at --axel-threads        Specify number of axel threads while downloading. Default is 4.
-    -uw --use-wget            Use wget instead of axel to download.
+    -h  --help                        Print this message.
+
+    -v  --verbose                     Print debug information.
+
+    -d  --download-link               Set custom download link for Stream-Pi client.
+                                      Defaults to the latest stable release.
+
+    -g  --gpu-mem                     Set custom GPU memory split, defaults to 128.
+
+    -i  --install-dir                 Set custom root installation directory.
+                                      Defaults to user's home directory.
+
+    -c  --client-dir                  Set custom directory for the client application.
+                                      This will be a sub-directory under 'install-dir',
+                                      defaults to 'stream-pi-client'.
+
+    -s  --skip-shortcut               Does not create shortcut in Desktop.
+
+    -b  --backlight-no                Does not modify Official Screen backlight persmissions.
+
+    -ky --enable-kms                  Skips user prompt and turns on KMS driver.
+
+    -kn --dont-enable-kms             Skips user prompt and does not turn on KMS driver.
+
+    -ry --reboot-after-install        Skip reboot prompt and reboot automatically after installation.
+
+    -rn --dont-reboot-after-install   Skips reboot prompt and does NOT perform reboot after installation.
+                                      Not Recommended with fresh installs.
+
+    -z  --zip-file                    Use custom zip instead of downloading.
+
+    -p  --preserve-old-data           Skips user data and preserve previous Stream-Pi data (if found).
+                                      Not recommended for upgrading to different versions.
+
+    -t  --dont-add-touch              Does not add touch support. 
+                                      Not recommended if Client is to be used in Console mode.
+
+    -at --axel-threads                Specify number of axel threads while downloading. Default is 4.
+
+    -uw --use-wget                    Use wget instead of axel to download.
 EOF
 }
 
@@ -120,6 +146,12 @@ parse_params() {
       ;;
     -kn | --dont-enable-kms)
       SKIP_KMS_PROMPT=2
+      ;;
+    -ry | --reboot-after-install)
+      SKIP_REBOOT_PROMPT=1
+      ;;
+    -rn | --dont-reboot-after-install)
+      SKIP_REBOOT_PROMPT=2
       ;;
     -z | --zip-file)
       DOWNLOAD=false
@@ -164,6 +196,7 @@ FOLDER_NAME=$FOLDER_NAME
 CREATE_SHORTCUT=$CREATE_SHORTCUT
 CHANGE_BACKLIGHT_PERMISSIONS=$CHANGE_BACKLIGHT_PERMISSIONS
 SKIP_KMS_PROMPT=$SKIP_KMS_PROMPT
+SKIP_REBOOT_PROMPT=$SKIP_REBOOT_PROMPT
 DOWNLOAD=$DOWNLOAD
 ZIP_FILE=$ZIP_FILE
 ADD_TOUCH_SUPPORT=$ADD_TOUCH_SUPPORT
@@ -440,10 +473,16 @@ if [ "$CREATE_SHORTCUT" == true ]; then
 echo -e "A desktop shortcut has also been created in $HOME/Desktop for ease of use."
 fi
 
+if [ "$SKIP_REBOOT_PROMPT" == 0 ]; then
 echo -e "\nRestart now? [Y/N]\n"
 read -n 1 -r </dev/tty
 echo  
 if [[ $REPLY =~ ^[Yy]$ ]]; then
   sudo reboot
 fi
+elif [ "$SKIP_REBOOT_PROMPT" == 1 ]; then
+sudo reboot
+fi
+
+
 
